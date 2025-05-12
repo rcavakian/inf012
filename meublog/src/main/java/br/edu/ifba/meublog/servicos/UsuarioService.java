@@ -54,4 +54,9 @@ public class UsuarioService {
 		}
 		return null;
 	}
+
+	public Usuario findByNome(Usuario usuario) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

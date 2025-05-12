@@ -10,10 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.edu.ifba.meublog.dtos.PostDTO;
+import br.edu.ifba.meublog.dtos.PostForm;
 import br.edu.ifba.meublog.entidades.Post;
 import br.edu.ifba.meublog.entidades.Usuario;
 import br.edu.ifba.meublog.repositorios.PostRepository;
 import br.edu.ifba.meublog.repositorios.UsuarioRepository;
+import br.edu.ifba.meublog.servicos.UsuarioService;
+import br.edu.ifba.meublog.servicos.PostService;
 
 @RestController
 @RequestMapping("/posts")
@@ -21,16 +24,20 @@ public class PostController {
 	
 	private PostRepository postRepository;
 	private UsuarioRepository usuarioRepository;
-	public PostController(PostRepository postRepository, UsuarioRepository usuarioRepository) {
+
+	private PostService postService;
+	private UsuarioService usuarioService;
+	
+	public PostController(PostRepository postRepository, UsuarioService usuarioService) {
 		this.postRepository = postRepository;
-		this.usuarioRepository = usuarioRepository;
+		this.usuarioService = usuarioService;
 	}
 	
 	
 	@PostMapping
-	public ResponseEntity<PostDTO> criarPost(@RequestBody PostDTO postDTO) {
-		Post post = new Post(postDTO);
-		Usuario usuario = this.usuarioRepository.findByNome(postDTO.nomeUsuario());
+	public ResponseEntity<PostForm> criarPost(@RequestBody PostForm postForm) {
+		PostForm form = this.postService.cadastrar(postForm);
+		Usuario usuario = this.usuarioService.buscarPorNome(null);
 		if (usuario == null) {
 			return ResponseEntity.notFound().build();
 		}
